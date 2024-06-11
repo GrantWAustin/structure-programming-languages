@@ -93,7 +93,7 @@ def test_evaluate_logical_negation():
     equals("!0", {}, 1)
     equals("!1", {}, 0)
     equals("!(1*1)", {}, 0)
-    equals("!(1)+2", {}, 2)
+    equals("!(1)+1", {}, 1)
     equals("!(0)-1", {}, 0)
 
 
