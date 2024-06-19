@@ -74,10 +74,10 @@ def test_parse_factor():
 
 def parse_term(tokens):
     """
-    term = factor { "*"|"/" factor };
+    term = factor { "*"|"/" factor } | factor "%" factor;
     """
     node, tokens = parse_factor(tokens)
-    while tokens[0]["tag"] in ["*", "/"]:
+    while tokens[0]["tag"] in ["*", "/", "%"]:
         operator = tokens[0]["tag"]
         new_node, tokens = parse_factor(tokens[1:])
         node = {"tag": operator, "left": node, "right": new_node}
@@ -86,7 +86,7 @@ def parse_term(tokens):
 
 def test_parse_term():
     """
-    term = factor { "*"|"/" factor };
+    term = factor { "*"|"/" factor } | factor "%" factor;
     """
     tokens = tokenize("2")
     ast, tokens = parse_term(tokens)
@@ -98,6 +98,13 @@ def test_parse_term():
         "tag": "*",
         "left": {"tag": "number", "value": 2, "position": 0},
         "right": {"tag": "number", "value": 2, "position": 2},
+    }
+    tokens = tokenize("18%3")
+    ast, tokens = parse_term(tokens)
+    assert ast == {
+        "tag": "%",
+        "left": {"tag": "number", "value": 18, "position": 0},
+        "right": {"tag": "number", "value": 3, "position": 3}
     }
 
 

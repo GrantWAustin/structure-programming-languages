@@ -27,6 +27,10 @@ def evaluate(ast, environment):
     if ast["tag"] == "!":
         value, _ = evaluate(ast["value"], environment)
         return not value, False
+    if ast["tag"] == "%":
+        left_value, _ = evaluate(ast["left"], environment)
+        right_value, _ = evaluate(ast["right"], environment)
+        return left_value % right_value, False
     raise Exception(f"Unknown token in AST: {ast['tag']}")
 
 def equals(code, environment, expected_result, expected_environment=None):
@@ -75,6 +79,12 @@ def test_evaluate_division():
     print("test evaluate division")
     equals("12/3", {}, 4)
 
+def test_evaluate_modulo():
+    print("test evaluate modulo")
+    equals("18%3", {}, 0)
+    equals("25%4", {}, 1)
+    equals("116%37", {}, 5)
+
 def test_evaluate_unary_negation():
     print("test evaluate unary negation")
     equals("-12/3", {}, -4)
@@ -106,6 +116,7 @@ if __name__ == "__main__":
     test_evaluate_subtraction()
     test_evaluate_multiplication()
     test_evaluate_division()
+    test_evaluate_modulo()
     test_evaluate_unary_negation()
     test_evaluate_complex_expression()
     test_evaluate_logical_negation()
